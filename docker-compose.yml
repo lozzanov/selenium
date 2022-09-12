@@ -1,0 +1,19 @@
+version: "3.4"
+
+services:
+  selenium-grid:
+    image: selenium/standalone-chrome 
+    volumes:
+      - "/dev/shm:/dev/shm"
+    ports:
+      - "4444:4444"
+      - "5900:5900"
+    networks:
+      selenium_grid_net:
+       
+    container_name: selenium-grid
+    hostname: selenium
+   
+networks:
+  selenium_grid_net:
+
