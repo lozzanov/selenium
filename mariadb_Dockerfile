@@ -29,6 +29,16 @@ RUN   /root/mariadb_repo_setup
 RUN   apt-get update \
       && apt-get install -y python3-pip default-libmysqlclient-dev build-essential  mariadb-client-10.3 mariadb-server-10.3
 
+# mysql conf
+ADD   ./50-server.cnf                            /etc/mysql/mariadb.conf.d/50-server.cnf
+
+# start service mysql, grant access
+RUN   service mysql start \
+      && mysql -e "CREATE USER 'root'@'%' IDENTIFIED BY PASSWORD '';" \
+      && mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;" \
+      && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+      && rm -fr /var/cache/apt/* /var/lib/apt/lists/*
+
 EXPOSE 3306
 
 #CMD ["mysqld"]
