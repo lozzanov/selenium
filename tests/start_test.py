@@ -55,7 +55,7 @@ curs = conn.cursor()
 
 
 # Creating database 'versions' in database container
-curs.execute('create database versions')
+curs.execute('CREATE DATABASE IF NOT EXISTS versions')
 conn.close()
 
 # Connecting again to the database 'versions'
