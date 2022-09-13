@@ -1,0 +1,35 @@
+FROM ubuntu:20.04
+ENV   DEBIAN_FRONTEND noninteractive
+
+
+USER  root
+RUN   apt-get update                        \
+      &&  apt-get install -y                \
+      software-properties-common            \
+      gnupg                                 \
+      curl                                  \
+      wget                                  \
+      vim                                   \
+      ssh                                   \
+      tcpdump                               \
+      sudo                                  \
+      net-tools                             \
+      libcap2-bin                           \
+      && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /root/
+
+# install repos 
+RUN   wget https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+RUN   echo "733cf126b03f73050e242102592658913d10829a5bf056ab77e7f864b3f8de1f  mariadb_repo_setup"        | sha256sum -c -
+RUN   chmod +x mariadb_repo_setup
+RUN   /root/mariadb_repo_setup
+
+# install pip, mariadb server, client
+RUN   apt-get update \
+      && apt-get install -y python3-pip default-libmysqlclient-dev build-essential  mariadb-client-10.3 mariadb-server-10.3
+
+EXPOSE 3306
+
+#CMD ["mysqld"]
+

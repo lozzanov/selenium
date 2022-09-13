@@ -1,5 +1,6 @@
 version: "3.4"
-
+volumes:
+  my-db:
 services:
   selenium-grid:
     image: selenium/standalone-chrome 
@@ -17,6 +18,7 @@ services:
   python-app:
     build:
       context: .
+      dockerfile: python_Dockerfile
     image: python-selenium-tests:v1
     volumes:
       - "/home/dev/work/selenium/tests:/tests"
@@ -30,24 +32,18 @@ services:
     command: tail -f /dev/null
 
   database:
-    image: mariadb:10.7
+    build:
+      context: .
+      dockerfile: mariadb_Dockerfile
     ports:
       - 3306:3306
-    volumes:
-      - ~/apps/mariadb:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=S3cret
-      - MYSQL_PASSWORD=An0thrS3crt
-      - MYSQL_USER=citizix_user
-      - MYSQL_DATABASE=citizix_db
     networks:
       db_net:
         ipv4_address: 172.30.30.2
     container_name: database
     hostname: mariadb
-    command: tail -f /dev/null
+    command: bash -c "service mysql start; tail -f /dev/null"
 
- 
 networks:
   selenium_grid_net:
     ipam:

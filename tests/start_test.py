@@ -43,6 +43,6 @@ returned_list = list_of_dictionaries(text_result, index_list)
 
 print(returned_list)
 
-driver.close()
+#driver.close()
 
-driver.quit()
+#driver.quit()
