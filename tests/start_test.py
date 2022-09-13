@@ -32,6 +32,10 @@ elements = driver.find_elements(By.XPATH, "//div[@class='row active-release-list
 
 text_result = elements[0].text
 
+with open('/tests/output', 'w') as file:
+    file.write(text_result)
+
+
 index_list = ['Python version', 'Maintenance status', 'First released', 'End of support', 'Release schedule']
 
 returned_list = list_of_dictionaries(text_result, index_list)
