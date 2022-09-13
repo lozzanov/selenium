@@ -25,7 +25,17 @@ $ sudo docker-compose exec python-app bash
 root@python:/# python tests/start_test.py 
 ```
 
+Unittest added
+
+```console
+
+# python tests/test_version.py
+```
 
 From VNC Viewer monitor the performing test.
 
 VNC client is monitoring 172.20.20.2:5900 selenium-grid.
+
+
+
+
