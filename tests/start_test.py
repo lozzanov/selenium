@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 
+import pymysql
+import requests
+from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from time import sleep
-import pymysql
 
 def list_of_dictionaries(text, list_index):
     '''
@@ -28,11 +29,24 @@ def insert(dict_python):
     values = ', '.join("'" + str(x).replace('/', '_') + "'" for x in dict_python.values())
     return "INSERT IGNORE INTO %s ( %s ) VALUES ( %s );" % ('tbl_versions', columns, values)
 
+def health_check():
+    x = requests.get('http://selenium-grid:4444/status')
+    return x.status_code
+
+print('Test Started')
+
+while True:
+    status = health_check()
+    if status == 200:
+        print("Status Code from Selenium Grid: {}".format(status))
+        break
+    else:
+        print("Status Code from Selenium Grid: {}".format(status))
 
 '''
 Starting the remote webdriver in selenium-grid container.
 '''
-
+print('Connecting to Selenium Grid')
 driver = webdriver.Remote(command_executor='http://selenium-grid:4444/wd/hub',options=webdriver.ChromeOptions())
 sleep(5)
 driver.get('https://www.python.org/downloads/')
@@ -41,6 +55,7 @@ elements = driver.find_elements(By.XPATH, "//div[@class='row active-release-list
 text_result = elements[0].text
 
 # Data fetched from the driver is saved in file to be used in unittest.
+print('Data saved to file')
 with open('/tests/output', 'w') as file:
     file.write(text_result)
 
@@ -50,6 +65,7 @@ returned_list = list_of_dictionaries(text_result, index_list)
 '''
 The list of dictionaries has to be inserted in database container
 '''
+print('Connecting to Database')
 conn = pymysql.connect(host='172.30.30.2')
 curs = conn.cursor()
 
@@ -63,19 +79,21 @@ conn = pymysql.connect(host='172.30.30.2', db="versions")
 curs = conn.cursor()
 
 # Creating table 'tbl_versions'
+print('Create table')
 columns = ', '.join("`" + str(x).replace('/', '_') + "`" + " VARCHAR(255)" for x in index_list)
 sql_create_table = "CREATE TABLE IF NOT EXISTS  %s ( %s ) ;" % ('tbl_versions', columns)
 curs.execute(sql_create_table)
  
  
 # Inserting values of the dictionary in the table  
+print('Insert data')
 for row in returned_list:
     sql_insert = insert(row)
     curs.execute(sql_insert)
     conn.commit() 
  
 
-#print(returned_list)
+print('Test Finished')
 
 #driver.close()
 

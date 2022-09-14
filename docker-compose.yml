@@ -14,14 +14,16 @@ services:
         ipv4_address: 172.20.20.2
     container_name: selenium-grid
     hostname: selenium
+    depends_on:
+      - database
 
   python-app:
     build:
       context: .
       dockerfile: python_Dockerfile
     image: python-selenium-tests:v1
-    volumes:
-      - "/home/dev/work/selenium/tests:/tests"
+    #    volumes:
+    #  - "/home/dev/work/selenium/tests:/tests"
     networks:
       selenium_grid_net:
         ipv4_address: 172.20.20.3
@@ -29,7 +31,9 @@ services:
         ipv4_address: 172.30.30.3
     container_name: python-app
     hostname: python
-    command: tail -f /dev/null
+    depends_on:
+      - selenium-grid
+    command: bash -c "tail -f /dev/null"
 
   database:
     build:
