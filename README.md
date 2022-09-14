@@ -1,6 +1,6 @@
 # Selenium Automation Test
 
-### This project creates 3 Docker containers. 
+### This project creates three Docker containers. 
 
  - selenium-grid 
  - python-app
@@ -10,10 +10,10 @@
 This data is structured in a list of dictionaries and inserted in the MariaDB database in **database** container.
 
 
-In order to monitor the Chrome browser activities in the **selenim-grid** container a VNC client is used. VNC Viewer from the Host machine is connected to the exposed port of the **selenim-grid** container. All containers have static IP addresses configured in docker-compose.yml in order to be easily accessed. VNC Viewer from the Host is connected to 172.20.20.2:5900 to the **selenium-grid** . 
+In order to monitor the Chrome browser activities in the **selenium-grid** container a VNC client is used. VNC Viewer from the Host machine is connected to the exposed port of the **selenium-grid** container. All containers have static IP addresses configured in docker-compose.yml in order to be easily accessed. VNC Viewer from the Host is connected to 172.20.20.2:5900 to the **selenium-grid** . 
 **python-app** container inserts the test data to 172.30.30.2 in **database** .
 
-The network between **selenim-grid** and **python-app** is *selenium_grid_net* 
+The network between **selenium-grid** and **python-app** is *selenium_grid_net* 
 and  between **python-app** and **database** is used *db_net* .
 
 
